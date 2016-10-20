@@ -1,0 +1,31 @@
+{
+    "name": "cawaphp/var-dumper",
+    "description": "Сáша VarDumper",
+    "keywords": [
+        "dump",
+        "debug"
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "license": "GPL-3.0",
+    "authors": [
+        {
+            "name": "tchiotludo"
+        }
+    ],
+    "autoload": {
+        "files": [
+            "src/Resources/functions.php"
+        ],
+        "psr-4": {
+            "Cawa\\VarDumper\\": "src"
+        }
+    },
+    "require": {
+        "php": "~7.0",
+        "symfony/var-dumper": "~3.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~5.5"
+    }
+}
