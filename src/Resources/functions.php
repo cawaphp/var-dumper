@@ -87,6 +87,62 @@ if (!function_exists('systrace')) {
     }
 }
 
+
+if (!function_exists('contrace')) {
+    /**
+     * @param mixed $vars
+     */
+    function contrace(... $vars)
+    {
+        $cloner = new VarCloner();
+        $dumper = new CliDumper();
+        $dumper::$defaultColors = true;
+        $dumper->setStyles($styles = [
+            'default' => '{{{--black--}}}',
+            'num' => '{{{--darkred--}}}',
+            'const' => '{{{--blue--}}}',
+            'str' => '{{{--green--}}}',
+            'note' => '{{{--lightblue--}}}',
+            'ref' => '{{{--grey--}}}',
+            'public' => '',
+            'protected' => '',
+            'private' => '',
+            'meta' => '{{{--purple--}}}',
+            'key' => '{{{--green--}}}',
+            'index' => '{{{--red--}}}',
+        ]);
+
+
+        ob_start();
+        $handler = function($var) use ($cloner, $dumper)  {
+            $dumper->dump($cloner->cloneVar($var));
+        };
+        $prevHandler = VarDumper::setHandler($handler);
+
+        if (sizeof($vars) == 1) {
+            VarDumper::dump($vars[0]);
+        } else {
+            VarDumper::dump($vars);
+        }
+
+        $output = str_replace(['\\', '"', "\n"], ['\\\\','\\"', '\n'], ob_get_clean());
+
+        $colors = [];
+
+        $output = preg_replace_callback('`\[\{\{\{--(.*)--\}}}m`U', function($matches) use (&$colors)
+        {
+            $colors[] = 'color:' . $matches[1];
+            return '%c';
+        }, $output);
+
+        $output = str_replace('[m', '', $output);
+
+        echo '<script type="text/javascript">console.log("' . $output  . '", ' . "'" . implode("','", $colors) . "'" . ');</script>';
+
+        VarDumper::setHandler($prevHandler);
+    }
+}
+
 if (!function_exists('backtrace')) {
     /**
      * @param string $name
