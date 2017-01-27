@@ -43,7 +43,7 @@ if (!function_exists('trace')) {
                 $dumper::$defaultColors = true;
             }
 
-            $handler = function($var) use ($cloner, $dumper) {
+            $handler = function ($var) use ($cloner, $dumper) {
                 $dumper->dump($cloner->cloneVar($var));
             };
 
@@ -69,8 +69,8 @@ if (!function_exists('systrace')) {
         $cloner = new VarCloner();
         $dumper = new \Symfony\Component\VarDumper\Dumper\CliDumper();
         $dumper::$defaultColors = true;
-        $handler = function($var) use ($cloner, $dumper) {
-            $dumper->dump($cloner->cloneVar($var), function($line, $depth, $indentPad) {
+        $handler = function ($var) use ($cloner, $dumper) {
+            $dumper->dump($cloner->cloneVar($var), function ($line, $depth, $indentPad) {
                 syslog(LOG_DEBUG, str_repeat($indentPad, $depth < 0 ? 0 : $depth) . $line);
             });
         };
@@ -86,7 +86,6 @@ if (!function_exists('systrace')) {
         closelog();
     }
 }
-
 
 if (!function_exists('contrace')) {
     /**
@@ -112,9 +111,8 @@ if (!function_exists('contrace')) {
             'index' => '{{{--red--}}}',
         ]);
 
-
         ob_start();
-        $handler = function($var) use ($cloner, $dumper)  {
+        $handler = function ($var) use ($cloner, $dumper) {
             $dumper->dump($cloner->cloneVar($var));
         };
         $prevHandler = VarDumper::setHandler($handler);
@@ -125,13 +123,13 @@ if (!function_exists('contrace')) {
             VarDumper::dump($vars);
         }
 
-        $output = str_replace(['\\', '"', "\n"], ['\\\\','\\"', '\n'], ob_get_clean());
+        $output = str_replace(['\\', '"', "\n"], ['\\\\', '\\"', '\n'], ob_get_clean());
 
         $colors = [];
 
-        $output = preg_replace_callback('`\[\{\{\{--(.*)--\}}}m`U', function($matches) use (&$colors)
-        {
+        $output = preg_replace_callback('`\[\{\{\{--(.*)--\}}}m`U', function ($matches) use (&$colors) {
             $colors[] = 'color:' . $matches[1];
+
             return '%c';
         }, $output);
 
