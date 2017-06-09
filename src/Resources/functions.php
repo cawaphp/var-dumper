@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-declare (strict_types = 1);
+declare(strict_types = 1);
 
 use Cawa\Error\Formatter\CliFormatter;
 use Cawa\Error\Formatter\HtmlFormatter;
@@ -22,7 +22,7 @@ if (!function_exists('trace')) {
     /**
      * @param mixed $vars
      */
-    function trace(... $vars)
+    function trace(...$vars)
     {
         static $init;
 
@@ -62,7 +62,7 @@ if (!function_exists('systrace')) {
     /**
      * @param mixed $vars
      */
-    function systrace(... $vars)
+    function systrace(...$vars)
     {
         openlog('php-debug', LOG_PID, LOG_USER);
 
@@ -91,7 +91,7 @@ if (!function_exists('contrace')) {
     /**
      * @param mixed $vars
      */
-    function contrace(... $vars)
+    function contrace(...$vars)
     {
         $cloner = new VarCloner();
         $dumper = new CliDumper();
@@ -135,7 +135,7 @@ if (!function_exists('contrace')) {
 
         $output = str_replace('[m', '', $output);
 
-        echo '<script type="text/javascript">console.log("' . $output  . '", ' . "'" . implode("','", $colors) . "'" . ');</script>';
+        echo '<script type="text/javascript">console.log("' . $output . '", ' . "'" . implode("','", $colors) . "'" . ');</script>';
 
         VarDumper::setHandler($prevHandler);
     }

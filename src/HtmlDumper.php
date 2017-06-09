@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-declare (strict_types = 1);
+declare(strict_types = 1);
 
 namespace Cawa\VarDumper;
 
@@ -121,6 +121,7 @@ class HtmlDumper extends \Symfony\Component\VarDumper\Dumper\HtmlDumper
 
         parent::__construct($output, $charset);
     }
+
     /**
      * {@inheritdoc}
      */
