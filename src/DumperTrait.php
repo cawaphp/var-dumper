@@ -13,6 +13,8 @@ declare(strict_types = 1);
 
 namespace Cawa\VarDumper;
 
+use Cawa\Error\Formatter\AbstractFormatter;
+
 trait DumperTrait
 {
     /**
@@ -40,7 +42,17 @@ trait DumperTrait
         $backtraces = array_reverse(debug_backtrace());
         foreach ($backtraces as $backtrace) {
             if (isset($backtrace['function']) && $backtrace['function'] == 'trace') {
-                $from = ' : ' . $backtrace['file'] . ':' . $backtrace['line'];
+                $from = ' : ';
+                if ($this instanceof HtmlDumper) {
+                    $link = AbstractFormatter::getIdeLink($backtrace['file'], $backtrace['line'] ?? null);
+                    if ($link) {
+                        $link = ' href="' . $link . '"';
+                    }
+
+                    $from .= '<a' . $link . '>' . $backtrace['file'] . ':' . $backtrace['line'] . '</a>';
+                } else {
+                    $from .= $backtrace['file'] . ':' . $backtrace['line'];
+                }
 
                 // replace % in order to avoid sprintf failure
                 $extract = "\n" .
